@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include tsxero *.css
+recursive-include tsxero *.csv
+recursive-include tsxero *.html
+recursive-include tsxero *.ico
+recursive-include tsxero *.js
+recursive-include tsxero *.json
+recursive-include tsxero *.md
+recursive-include tsxero *.png
+recursive-include tsxero *.py
+recursive-include tsxero *.svg
+recursive-include tsxero *.txt
+recursive-exclude tsxero *.pyc
