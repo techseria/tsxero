@@ -15,6 +15,9 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/tsxero/css/tsxero.css"
 # app_include_js = "/assets/tsxero/js/tsxero.js"
+app_include_js = "/assets/tsxero/fontawesome/js/custom/item.js"
+app_include_js = "/assets/tsxero/fontawesome/js/custom/payment_entry.js"
+# app_include_js = "/assets/tsxero/fontawesome/js/custom/sales_taxes_and_charges_template.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/tsxero/css/tsxero.css"
@@ -32,7 +35,7 @@ app_license = "MIT"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+# doctype_list_js = {"Item" : "public/fontawesome/js/custom/item_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -95,13 +98,29 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Customer": {
+		"after_insert": "tsxero.api.create_customer_in_xero",
+		"on_update": "tsxero.api.create_customer_in_xero"
+	},
+	"Supplier": {
+		"after_insert": "tsxero.api.create_supplier_in_xero",
+		"on_update": "tsxero.api.create_supplier_in_xero"
+	},
+	"Sales Invoice": {
+		"after_insert": "tsxero.api.create_sales_invoice_in_xero",
+		"on_update": "tsxero.api.create_sales_invoice_in_xero",
+		"on_submit": "tsxero.api.popup_msg"
+	},
+	"Purchase Invoice": {
+		"after_insert": "tsxero.api.create_purchase_invoice_in_xero",
+		"on_update": "tsxero.api.create_purchase_invoice_in_xero",
+  		"on_submit": "tsxero.api.popup_msg"
+	},
+	"Payment Entry": {
+		"on_update": "tsxero.api.erp_payment_entry_to_xero",
+	}
+}
 
 # Scheduled Tasks
 # ---------------

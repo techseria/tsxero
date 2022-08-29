@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-07-19 13:11:25.414870",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "client_id",
+  "client_secret",
+  "scopes",
+  "redirect_url",
+  "refresh_token",
+  "access_token",
+  "token_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "client_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Client Id",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_secret",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Client Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "scopes",
+   "fieldtype": "Data",
+   "label": "Scopes",
+   "reqd": 1
+  },
+  {
+   "fieldname": "redirect_url",
+   "fieldtype": "Data",
+   "label": "Redirect URI",
+   "read_only": 1
+  },
+  {
+   "fieldname": "refresh_token",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Refresh Token"
+  },
+  {
+   "fieldname": "access_token",
+   "fieldtype": "Long Text",
+   "hidden": 1,
+   "label": "Access Token",
+   "length": 1000
+  },
+  {
+   "default": "0",
+   "fieldname": "token_status",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Status"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-08-10 10:15:21.119584",
+ "modified_by": "Administrator",
+ "module": "Xero Integration",
+ "name": "Xero Configuration Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

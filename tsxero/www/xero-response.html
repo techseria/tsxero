@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/fontawesome/css/all.css">
+
+    <style>
+        .box{
+            padding: 150px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="box">
+            <i class="fa-solid fa-circle-check" style="font-size: 100px; color: green;"></i>
+            <h3 style="font-family: 'Open Sans',sans-serif; color: rgb(88, 88, 88);"><b>Authentication complete</b></h3>
+            <h4 style="font-family: 'Open Sans',sans-serif; color: rgb(88, 88, 88);">You can close the tab and go back to the your app.</h4>
+        </div>
+    </div>
+    
+    <script src="/assets/tsportal/plugins/jquery/jquery.min.js"></script>
+    {% block base_scripts %}
+	<!-- js should be loaded in body! -->
+	<script type="text/javascript" src="/assets/js/frappe-web.min.js?ver={{ build_version }}"></script>
+	<script>
+		frappe.boot = {
+			sysdefaults: {
+				float_precision: parseInt("{{ frappe.get_system_settings('float_precision') or 3 }}"),
+				date_format: "{{ frappe.get_system_settings('date_format') or 'yyyy-mm-dd' }}",
+			}
+		};
+		// for backward compatibility of some libs
+		frappe.sys_defaults = frappe.boot.sysdefaults;
+	</script>
+	{% endblock %}
+    <script>
+        
+        var url = window.location.href;
+        var url2 = url.split('?');
+        if(url2.length > 1){
+            frappe.call({
+                method: "tsxero.api.auth_code", //dotted path to server method
+                args: {'url':url},
+                callback: function(r) {
+                    // code snippet
+                }
+            });
+            window.location.href = url2[0];
+            
+            
+        }
+        setTimeout(function(){
+            window.close();
+        }, 1000);
+
+    </script>
+</body>
+</html>
