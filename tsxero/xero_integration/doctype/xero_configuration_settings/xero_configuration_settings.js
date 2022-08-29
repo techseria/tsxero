@@ -5,7 +5,7 @@ frappe.ui.form.on('Xero Configuration Settings', {
 	refresh: function(frm) {
 		var url = window.location.href;
 		var url2 = url.split('/');
-		// frm.doc.redirect_url = url2[0]+'//'+url2[1]+url2[2]+"/xero-response";
+		frm.doc.redirect_url = url2[0]+'//'+url2[1]+url2[2]+"/xero-response";
 		function ConnectButton(){
 			frm.add_custom_button(__('Connect'), function() {
 				window.open(`https://login.xero.com/identity/connect/authorize?` +

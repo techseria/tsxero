@@ -366,18 +366,13 @@ def xero_payment_entry_to_erp():
         
         if (already_exists_sales_inv != None or already_exists_purchase_inv != None) and payment['Status'] != "DELETED":
             
-            print("already_exists_purchase_inv-----------", already_exists_purchase_inv)
             if already_exists_sales_inv != None:
                 get_erp_invoice = frappe.get_doc('Sales Invoice', {'xero_invoice_number':InvoiceID_with_InvoiceNum})
             else:
                 get_erp_invoice = frappe.get_doc('Purchase Invoice', {'xero_invoice_number':payment['Invoice']['InvoiceID']})
-            print('get_erp_invoice----------------', get_erp_invoice)
-            print("payment['PaymentID']-------------------", payment['PaymentID'])
             
             
             payment_entry_already_exists = frappe.db.exists('Payment Entry', {'xero_payment_id':payment['PaymentID']})
-            print('payment------', payment['Amount'])
-            print('payment_entry_already_exists-----------', payment_entry_already_exists)
             
             
             company_abbr = frappe.get_value('Company', get_erp_invoice.company, 'abbr')
@@ -431,7 +426,6 @@ def xero_payment_entry_to_erp():
                 payment_entry.source_exchange_rate = 1
                 payment_entry.target_exchange_rate = 1
                 payment_entry.xero_payment_id = payment['PaymentID']
-                print("payment['Amount']-------------", payment['Amount'])
                 payment_entry.submit()
                 import_payment += 1
     
