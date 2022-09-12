@@ -11,6 +11,37 @@ import time
 
 class XeroConfigurationSettings(Document):
     pass
+    
+def xero_refresh_token():
+    xero_config = frappe.get_list('Xero Configuration Settings')
+    name = xero_config[0]['name']
+    old_refresh_token = frappe.get_value('Xero Configuration Settings', {'name':name}, 'refresh_token')
+    get_client_id = frappe.get_value('Xero Configuration Settings', {'name':name}, 'client_id')
+    get_client_secret = frappe.get_value('Xero Configuration Settings', {'name':name}, 'client_secret')
+    b64_id_secret = base64.b64encode(bytes(get_client_id + ':' + get_client_secret, 'utf-8'))
+    url = 'https://identity.xero.com/connect/token'
+    response = requests.post(url,
+                            headers={
+                                'Authorization': f"Basic {b64_id_secret.decode('ascii')}",
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            data={
+                                'grant_type': 'refresh_token',
+                                'client_id': get_client_id,
+                                'refresh_token': old_refresh_token
+                            })
+    if response.status_code == 200:
+        response_dict = response.json()
+        new_access_token = response_dict['access_token']
+        get_Doc = frappe.get_doc('Xero Configuration Settings', {'client_id':get_client_id})
+        get_Doc.access_token = new_access_token
+        get_Doc.save()
+        return [new_access_token]
+    else:
+        status = frappe.get_doc('Xero Configuration Settings', {'client_id':get_client_id})
+        status.token_status = 0
+        status.save()
+        return "Failed"  
 
 @frappe.whitelist()
 def get_conf_data(name):
@@ -58,40 +89,12 @@ def Connection(token):
         if 'tenantId' in t:
             tenantId = t['tenantId']
     return tenantId
-
-@frappe.whitelist()
-def xero_refresh_token(name):
-    old_refresh_token = frappe.get_value('Xero Configuration Settings', {'name':name}, 'refresh_token')
-    get_client_id = frappe.get_value('Xero Configuration Settings', {'name':name}, 'client_id')
-    get_client_secret = frappe.get_value('Xero Configuration Settings', {'name':name}, 'client_secret')
-    b64_id_secret = base64.b64encode(bytes(get_client_id + ':' + get_client_secret, 'utf-8'))
-    url = 'https://identity.xero.com/connect/token'
-    response = requests.post(url,
-                             headers={
-                                 'Authorization': f"Basic {b64_id_secret.decode('ascii')}",
-                                 'Content-Type': 'application/x-www-form-urlencoded'
-                             },
-                             data={
-                                 'grant_type': 'refresh_token',
-                                 'client_id': get_client_id,
-                                 'refresh_token': old_refresh_token
-                             })
-    if response.status_code == 200:
-        response_dict = response.json()
-        new_access_token = response_dict['access_token']
-        get_Doc = frappe.get_doc('Xero Configuration Settings', {'client_id':get_client_id})
-        get_Doc.access_token = new_access_token
-        get_Doc.save()
-        return [new_access_token]
-    else:
-        status = frappe.get_doc('Xero Configuration Settings', {'client_id':get_client_id})
-        status.token_status = 0
-        status.save()
-        return "Failed"    
+      
+def Customer():
     
-@frappe.whitelist()
-def ContactsAPI(name, flag):
-    ContactUrl = f'https://api.xero.com/api.xro/2.0/Contacts?where={flag}=true'
+    xero_config = frappe.get_list('Xero Configuration Settings')
+    name = xero_config[0]['name']
+    ContactUrl = f'https://api.xero.com/api.xro/2.0/Contacts?where=IsCustomer=true'
     new_tokens = frappe.get_value('Xero Configuration Settings', {'name':name}, 'access_token')
     xero_tenant_id = Connection(new_tokens)
     conRes = requests.get(ContactUrl,
@@ -101,7 +104,25 @@ def ContactsAPI(name, flag):
                                    }
                           )
     if conRes.status_code == 200:
-        customers = ImportXeroCustomerToErp(conRes.json()['Contacts'], flag)
+        customers = ImportXeroCustomerToErp(conRes.json()['Contacts'], "IsCustomer")
+        return {"status": "Success", "import_customer": customers}
+    else:
+        return {"status": "Failed"}
+    
+def Supplier():
+    xero_config = frappe.get_list('Xero Configuration Settings')
+    name = xero_config[0]['name']
+    ContactUrl = f'https://api.xero.com/api.xro/2.0/Contacts?where=IsSupplier=true'
+    new_tokens = frappe.get_value('Xero Configuration Settings', {'name':name}, 'access_token')
+    xero_tenant_id = Connection(new_tokens)
+    conRes = requests.get(ContactUrl,
+                          headers={'xero-tenant-id': xero_tenant_id,
+                                   'Authorization': f'Bearer {new_tokens}',
+                                   'Accept': 'application/json'
+                                   }
+                          )
+    if conRes.status_code == 200:
+        customers = ImportXeroCustomerToErp(conRes.json()['Contacts'], "IsCustomer")
         return {"status": "Success", "import_customer": customers}
     else:
         return {"status": "Failed"}
@@ -248,5 +269,3 @@ def address_and_contact(customer, default_company, doctype):
                     "link_title": customer['Name'],
                 })
                 new_address.save()
-
-

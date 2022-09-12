@@ -34,73 +34,74 @@ frappe.ui.form.on('Xero Configuration Settings', {
 				});
 			});
 		}
-		function CustomerImportButton(){
-			frm.add_custom_button(__('Xero Customer Import'), function() {
-				frappe.call({
-					"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.ContactsAPI",
-					"args" : {
-						name : frm.doc.name,
-						flag : 'IsCustomer'
-					},
-					"callback" : function(r){
-						if(r.message.status == 'Success'){
-							frappe.msgprint("Imported <b>"+ r.message.import_customer + " customers</b> successfully!");
-						}
-						else{
-							frappe.throw(__('Import failed. Please refresh the token'));
-						}
-					}
-				});
-			});
-		}
-		function SupplierImportButton(){
-			frm.add_custom_button(__('Xero Supplier Import'), function() {
-				frappe.call({
-					"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.ContactsAPI",
-					"args" : {
-						name : frm.doc.name,
-						flag : 'IsSupplier'
-					},
-					"callback" : function(r){
-						if(r.message.status == 'Success'){
-							frappe.msgprint("Imported <b>"+ r.message.import_customer + " suppliers</b> successfully!");
-						}
-						else{
-							frappe.throw(__('Import failed. Please refresh the token'));
-						}
-					}
-				});
-			});
-		}
-		function RefreshTokenButton(){
-			frm.add_custom_button(__('Refresh Token'), function() {
-				frappe.call({
-					"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.xero_refresh_token",
-					"args" : {
-						name : frm.doc.name,
-					},
-					"callback" : function(r){
-						if(r.message != 'Failed'){
-							frappe.msgprint("Refresh token successfully!");
-						}
-						else{
-							ConnectButton();
-							frm.remove_custom_button('Refresh Token');
-							frm.remove_custom_button('Xero Supplier Import');
-							frm.remove_custom_button('Xero Customer Import');
-							frappe.throw(__('Refresh token failed. Please connect again'));
-						}
-					}
-				});
-			});
-		}
+		// function CustomerImportButton(){
+		// 	frm.add_custom_button(__('Xero Customer Import'), function() {
+		// 		frappe.call({
+		// 			"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.ContactsAPI",
+		// 			"args" : {
+		// 				name : frm.doc.name,
+		// 				flag : 'IsCustomer'
+		// 			},
+		// 			"callback" : function(r){
+		// 				if(r.message.status == 'Success'){
+		// 					frappe.msgprint("Imported <b>"+ r.message.import_customer + " customers</b> successfully!");
+		// 				}
+		// 				else{
+		// 					frappe.throw(__('Import failed. Please refresh the token'));
+		// 				}
+		// 			}
+		// 		});
+		// 	});
+		// }
+		// function SupplierImportButton(){
+		// 	frm.add_custom_button(__('Xero Supplier Import'), function() {
+		// 		frappe.call({
+		// 			"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.ContactsAPI",
+		// 			"args" : {
+		// 				name : frm.doc.name,
+		// 				flag : 'IsSupplier'
+		// 			},
+		// 			"callback" : function(r){
+		// 				if(r.message.status == 'Success'){
+		// 					frappe.msgprint("Imported <b>"+ r.message.import_customer + " suppliers</b> successfully!");
+		// 				}
+		// 				else{
+		// 					frappe.throw(__('Import failed. Please refresh the token'));
+		// 				}
+		// 			}
+		// 		});
+		// 	});
+		// }
+		// function RefreshTokenButton(){
+		// 	frm.add_custom_button(__('Refresh Token'), function() {
+		// 		frappe.call({
+		// 			"method" : "tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.xero_refresh_token",
+		// 			"args" : {
+		// 				name : frm.doc.name,
+		// 			},
+		// 			"callback" : function(r){
+		// 				if(r.message != 'Failed'){
+		// 					frappe.msgprint("Refresh token successfully!");
+		// 				}
+		// 				else{
+		// 					ConnectButton();
+		// 					frm.remove_custom_button('Refresh Token');
+		// 					frm.remove_custom_button('Xero Supplier Import');
+		// 					frm.remove_custom_button('Xero Customer Import');
+		// 					frappe.throw(__('Refresh token failed. Please connect again'));
+		// 				}
+		// 			}
+		// 		});
+		// 	});
+		// }
 		if (frm.doc.token_status === "0"){
 			ConnectButton();
 		}
 		else if (frm.doc.token_status === "1"){
-			CustomerImportButton();
-			SupplierImportButton();
-			RefreshTokenButton();
+			// CustomerImportButton();
+			// SupplierImportButton();
+			// RefreshTokenButton();
+			console.log('Connected');
 		}
 		
 	}

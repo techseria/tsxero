@@ -333,7 +333,6 @@ def import_xero_items():
             
     return {"import_items": import_items}
 
-@frappe.whitelist()
 def xero_payment_entry_to_erp():
     PaymentEntry = 'https://api.xero.com/api.xro/2.0/Payments'
     Accounts = 'https://api.xero.com/api.xro/2.0/Accounts'
@@ -431,7 +430,6 @@ def xero_payment_entry_to_erp():
     
     return {'import_payment': import_payment}
 
-@frappe.whitelist()
 def erp_payment_entry_to_xero(doc, method):
     if doc.xero_payment_id == None:
         PaymentEntry = 'https://api.xero.com/api.xro/2.0/Payments'
@@ -495,7 +493,8 @@ def erp_payment_entry_to_xero(doc, method):
             "CurrencyRate": 1,
             "Status": "AUTHORISED",
             "HasAccount": True,
-            "Account": {"AccountID": AccRes[0]['AccountID'], "Code": AccRes[0]['Code']},
+            "Account": {"AccountID": "bd9e85e0-0478-433d-ae9f-0b3c4f04bfe4", "Code": "090"},
+            # "Account": {"AccountID": AccRes[0]['AccountID'], "Code": AccRes[0]['Code']},
             "Invoice": invoice
         })
         
@@ -518,5 +517,4 @@ def popup_msg(doc, method):
     if len(invoiceId) == 2:
         frappe.msgprint(f'This {invoiceId[1]} invoice created in xero. Please kindly check and approve in xero')
     else:
-        frappe.msgprint(f'This {doc.xero_invoice_id} invoice created in xero. Please kindly check and approve in xero')
-        
+        frappe.msgprint(f'This invoice created in xero. Please kindly check and approve in xero')

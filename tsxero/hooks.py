@@ -15,8 +15,8 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/tsxero/css/tsxero.css"
 # app_include_js = "/assets/tsxero/js/tsxero.js"
-app_include_js = "/assets/tsxero/fontawesome/js/custom/item.js"
-app_include_js = "/assets/tsxero/fontawesome/js/custom/payment_entry.js"
+# app_include_js = "/assets/tsxero/fontawesome/js/custom/item.js" ---------------------
+# app_include_js = "/assets/tsxero/fontawesome/js/custom/payment_entry.js" ----------------
 # app_include_js = "/assets/tsxero/fontawesome/js/custom/sales_taxes_and_charges_template.js"
 
 # include js, css files in header of web template
@@ -125,23 +125,47 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"tsxero.tasks.all"
-# 	],
-# 	"daily": [
-# 		"tsxero.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"tsxero.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"tsxero.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"tsxero.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+    
+    "cron": {
+        # Refresh Token
+		"*/20 * * * *": [
+			"tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.xero_refresh_token",
+		],
+		# Import customer
+		"0 1 * * *": [
+			"tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.Customer",
+		],
+		# Import supplier
+		"0 3 * * *": [
+			"tsxero.xero_integration.doctype.xero_configuration_settings.xero_configuration_settings.Supplier",
+		],
+		# Import items
+  		"0 5 * * *": [
+			"tsxero.api.import_xero_items",
+		],
+		# Xero payment entry to erp
+    	"0 6 * * *": [
+			"tsxero.api.xero_payment_entry_to_erp",
+		],
+	},
+    
+	# "all": [
+	# 	"tsxero.tasks.all"
+	# ],
+	# "daily": [
+	# 	"tsxero.tasks.daily"
+	# ],
+	# "hourly": [
+	# 	"tsxero.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"tsxero.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"tsxero.tasks.monthly"
+	# ]
+}
 
 # Testing
 # -------
